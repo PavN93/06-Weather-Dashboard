@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Pawel Nawoj" />
+  <title>Weather Dashboard</title>
+
+  <!-- favicon -->
+  <!-- <link rel="shortcut icon" type="image/png" href="./assets/images/favicon.ico" /> -->
+
+  <!-- Bootstrap 4.5.2 -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+
+
+  <link href="./assets/style/style.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <!-- Header with search bar -->
+  <header class="jumbotron">
+    <h1 class="display-4">Weather Board welcomes you!</h1>
+    <p class="lead">This simple webapp will help you plan your holiday!</p>
+    <br />
+    <div class="input-group input-group-md">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-md">Forecast for</span>
+      </div>
+      <input data-input="city" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-md"
+        placeholder="City name">
+      <a data-button="search" class="btn btn-primary btn-md" role="button">Search!</a>
+    </div>
+  </header>
+
+  <!-- Weather data & search history -->
+  <section class="container">
+    <div class="row">
+
+      <!-- history -->
+      <div class="col-md-5 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/history.png" />
+        <div class="history-on-image">
+          <table>
+            <thead>
+              <tr>
+                <!-- <th>Recently searched</th> -->
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- today -->
+      <div class="col-md-7 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/for-today.png" />
+        <div data-weather="today" class="today-on-image">
+          <!-- <p>ICON</p>
+          <h6>City Name + (data/data)</h6>
+          <p>Temperature</p>
+          <p>Humidity</p>
+          <p>Wind-speed</p>
+          <p>UV Index</p> -->
+        </div>
+      </div>
+    </div>
+    <!-- five days weather -->
+    <div class="row">
+      <!-- day 1 -->
+      <div class="col-xl-2 col-md-4 col-sm-6 col-12 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/for-5-day.png" />
+        <div class="days-on-image">
+          <!-- <h6>D/A/T/E</h6>
+          <p>ICON</p>
+          <p>Temp: 15*C</p>
+          <p>Hum: 80%</p> -->
+        </div>
+      </div>
+      <!-- day 2 -->
+      <div class="col-xl-2 col-md-4 col-sm-6 col-12 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/for-5-day.png" />
+        <div class="days-on-image">
+          <!-- <h6>D/A/T/E</h6>
+          <p>ICON</p>
+          <p>Temp</p>
+          <p>Humidity</p> -->
+        </div>
+      </div>
+      <!-- day 3 -->
+      <div class="col-xl-2 col-md-4 col-sm-6 col-12 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/for-5-day.png" />
+        <div class="days-on-image">
+          <!-- <h6>D/A/T/E</h6>
+          <p>ICON</p>
+          <p>Temp: 31*C</p>
+          <p>Hum: 91%</p> -->
+        </div>
+      </div>
+      <!-- day 4 -->
+      <div class="col-xl-2 col-md-4 col-sm-6 col-12 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/for-5-day.png" />
+        <div class="days-on-image">
+          <!-- <h6>D/A/T/E</h6>
+          <p>ICON</p>
+          <p>Temp</p>
+          <p>Humidity</p> -->
+        </div>
+      </div>
+      <!-- day 5 -->
+      <div class="col-xl-2 col-md-4 col-sm-6 col-12 center-img-in-div">
+        <img class="img-fluid" src="./assets/images/for-5-day.png" />
+        <div class="days-on-image">
+          <!-- <h6>D/A/T/E</h6>
+          <p>ICON</p>
+          <p>Temp</p>
+          <p>Humidity</p> -->
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- jQuery 3.4.1 min -->
+
+  <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+
+
+  <!-- Bootstrap script -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+    </script>
+
+  <script src="./assets/script/script.js" defer></script>
+</body>
+
+</html>

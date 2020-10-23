@@ -1,0 +1,176 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  margin: auto;
+  background-image: url(../images/background-5.png);
+  min-width: 350px;
+}
+
+section {
+  max-width: 1140px;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.input-group {
+  max-width: 600px;
+  text-align: center;
+  margin: auto;
+}
+
+.input-group input {
+  display: inline-block;
+}
+
+.jumbotron {
+  padding-top: 1rem;
+  background: linear-gradient(0deg, rgba(78,78,78,0) 0%, rgba(78,78,78,0.5046393557422969) 15%, rgba(78,78,78,0.9023984593837535) 40%, rgba(78,78,78,1) 60%);
+  width: 100%;
+  color: white;
+}
+
+.jumbotron h1 {
+  font-weight: 600;
+}
+
+.center-img-in-div {
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+
+.history-on-image {
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+
+.history-on-image table, th, td {
+  border: 2px solid slategray;
+  border-collapse: collapse;
+  line-height: 1.8em;
+}
+
+.history-on-image th {
+  font-family: cursive;
+  color: crimson;
+  font-weight: 700;
+  font-size: 1.3em;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.history-on-image td {
+  font-size: 1.1em;
+}
+
+.today-on-image {
+  position: absolute;
+  top: 55%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 70%;
+}
+
+.today-on-image h6 {
+  font-size: 2em;
+  padding-bottom: 10px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: rgb(32, 97, 151);
+}
+
+.today-on-image p {
+  font-size: 1.3em;
+  font-weight: 500;
+}
+
+.days-on-image {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 70%;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.days-on-image h6 {
+  font-weight: 600;
+}
+
+ /* Header media */
+@media screen and (max-width: 955px) {
+  .jumbotron h1 {
+    font-size: 3em;
+  }
+}
+
+@media screen and (max-width: 828px) {
+  .jumbotron h1 {
+    font-size: 2em;
+  }
+}
+
+@media screen and (max-width: 541px) {
+  .jumbotron h1 {
+    font-size: 1.3em;
+  }
+  .jumbotron p {
+    font-size: 0.8em;
+  }
+}
+
+
+/* Images media */
+@media screen and (max-width: 1199px) {
+  .history-on-image {
+    font-size: 0.8em;
+  }
+  .today-on-image h6 {
+    font-size: 1.6em;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .history-on-image {
+    font-size: 0.6em;
+  }
+  .today-on-image h6 {
+    font-size: 1.3em;
+  }
+  .today-on-image p {
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .history-on-image {
+    font-size: 1.2em;
+  }
+  .today-on-image h6 {
+    font-size: 1.7em;
+  }
+  .today-on-image p {
+    font-size: 1.1em;
+  }
+}
+
+@media screen and (max-width: 538px) {
+  .history-on-image {
+    font-size: 0.7em;
+  }
+  .today-on-image h6 {
+    font-size: 1em;
+  }
+  .today-on-image p {
+    font-size: 0.7em;
+  }
+}
