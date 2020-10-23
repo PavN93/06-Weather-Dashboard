@@ -5,7 +5,7 @@
 body {
   text-align: center;
   margin: auto;
-  background-image: url(../images/background-5.png);
+  background-image: url(../images/background.png);
   min-width: 350px;
 }
 
@@ -73,7 +73,7 @@ section {
 
 .today-on-image {
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 51%;
   transform: translate(-50%, -50%);
   text-align: center;
