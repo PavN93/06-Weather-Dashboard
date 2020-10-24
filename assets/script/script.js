@@ -8,6 +8,7 @@ const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 
 // on page load
 writeHistoryList();
+writeWeatherOnLoad();
 
 // search button click
 $(searchBtn).on("click", function() {
@@ -16,7 +17,12 @@ $(searchBtn).on("click", function() {
   inputCityTodayUrl = todayWeatherUrl(cityName);
 });
 
-
+function writeWeatherOnLoad (){
+  const historyFromStorage = getSearchHistory();
+  if (historyFromStorage.length > 0) {
+    todayWeatherUrl(historyFromStorage[historyFromStorage.length -1].name);
+  }
+};
 
 // Construct current weather link
 function todayWeatherUrl(cityName) {
@@ -111,6 +117,7 @@ function writeHistoryList() {
   const historyFromStorage = getSearchHistory();
   historyListTable.empty();
   if (historyFromStorage.length > 0) {
+    // todayWeatherUrl(historyFromStorage[historyFromStorage.length -1].name);
     $.each(historyFromStorage, function (index, searchedCity) {
       const historyElement = "<tr><td><a href='#' data-history-city='" + searchedCity.name + "'>" + searchedCity.name + "</a></td></tr>";
       $(historyListTable).prepend(historyElement);
@@ -129,4 +136,4 @@ function handleHistoryLinkClick() {
   $(inputCityName).val(cityClicked);
   todayWeatherUrl(cityClicked);
 })
-}
+};
