@@ -1,48 +1,135 @@
 
 const searchBtn = $("[data-button='search'");
 const inputCityName = $("[data-input='city'");
+const historyListTable = $("[data-history='list'");
+const todayWeatherField = $("[data-weather='today']")
 const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 
 
+
+writeHistoryList();
 // search button click
 $(searchBtn).on("click", function() {
-  inputCityTodayUrl = todayWeatherUrl();
-  todayWeatherDetails = getTodayWeather(inputCityTodayUrl);
-  // console.log("Weather object:", todayWeatherDetails);
-
+  console.log(moment().add(2, "d").format("YYYY-MM-DD"), "12:00:00");
+  const cityName = inputCityName.val();
+  inputCityTodayUrl = todayWeatherUrl(cityName);
+  fiveDaysWeatherUrl = forFiveDaysUrl(cityName);
+  // fiveDaysWeather = getFiveDaysWeather(fiveDaysWeatherUrl);
 });
 
+
+
 // Construct current weather link
-function todayWeatherUrl() {
-  const cityName = inputCityName.val();
+function todayWeatherUrl(cityName) {
   const todayUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=metric&appid=" + apiKey;
-  return todayUrl;
+  getTodayWeather(todayUrl, cityName) ;
 };
 
-function getTodayWeather(inputCityTodayUrl) { 
+// Construct 5 days weather link
+function forFiveDaysUrl(cityName) {
+  const fiveDaysUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric&appid=" + apiKey;
+  getFiveDaysWeather(fiveDaysUrl);
+};
+
+// get object for todays weather
+function getTodayWeather(inputCityTodayUrl, cityName) { 
   $.ajax({
     url : inputCityTodayUrl,
     success : function (todayWeatherDetails) {
-      writeCurrentWeather(todayWeatherDetails);
+      // successfulSearch(cityName);
+      writeCurrentWeather(todayWeatherDetails, cityName);
     }
   }).catch(function() {
     console.log("There was an error");
   });
 };
 
-function writeCurrentWeather(todayWeatherDetails) {
-  console.log("write weather", todayWeatherDetails);
-  const todayWeatherField = $("[data-weather='today']").empty();
+// get object for five days weather
+function getFiveDaysWeather(fiveDaysWeatherUrl) {
+  $.ajax({
+    url : fiveDaysWeatherUrl,
+    success : function (fiveDaysWeatherDetails) {
+      writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
+    }
+  }).catch(function() {
+    console.log("Couldn't find 5 days weather");
+  })
+};
+
+// write todays weather and date
+function writeCurrentWeather(todayWeatherDetails, cityName) {
+  todayWeatherField.empty();
   const iconId = todayWeatherDetails.weather[0].icon;
-  let writeWeatherDetails = "<img class='img-fluid' src='./assets/images/icons/" + iconId + ".png'/>"; 
+  let writeWeatherDetails = "<img src='./assets/images/icons/" + iconId + ".png' style=width:50px;/>"; 
   todayWeatherField.append(writeWeatherDetails);
   // had to split appending due to styling issues
   let currentDate = moment().format('D-M-YYYY');
-  writeWeatherDetails = "<h6>" + todayWeatherDetails.name + " (" + currentDate + ")<h6>";
+  writeWeatherDetails = "<h6>" + todayWeatherDetails.name + " (" + currentDate + ")</h6>";
   todayWeatherField.append(writeWeatherDetails);
-  writeWeatherDetails = "<p>Temperature: " + Math.round(todayWeatherDetails.main.temp) + "\xB0C<p>";
-  writeWeatherDetails += "<p>Humidity: " + todayWeatherDetails.main.humidity + "%<p>";
-  writeWeatherDetails += "<p>Wind: " + todayWeatherDetails.wind.speed + " mph<p>";
+  writeWeatherDetails = "<p>Temperature: " + Math.round(todayWeatherDetails.main.temp) + "\xB0C</p>";
+  writeWeatherDetails += "<p>Humidity: " + todayWeatherDetails.main.humidity + "%</p>";
+  writeWeatherDetails += "<p>Wind: " + todayWeatherDetails.wind.speed + " mph</p>";
   todayWeatherField.append(writeWeatherDetails);
+  saveHistoryToStorage(cityName, todayWeatherDetails);
 };
 
+// write five days weather to cards
+function writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl){
+  console.log("five days object:", fiveDaysWeatherDetails);
+  console.log("five days URL:", fiveDaysWeatherUrl);
+};
+
+// function to add searched city to history
+function saveHistoryToStorage(cityName, todayWeatherDetails){
+  searchHistory = getSearchHistory();
+  const result = {
+    name : cityName,
+    id : todayWeatherDetails.id
+  }
+  const id = result.id;
+  searchHistory = searchHistory.filter(item => item.id !== id);
+  if (searchHistory.length > 0 && searchHistory.length < 8) {
+    searchHistory.push(result);
+  } else if (searchHistory.length >= 8) {
+    searchHistory.shift();
+    searchHistory.push(result);
+  } else {
+    searchHistory.push(result);
+  }
+  localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+  writeHistoryList();
+};
+
+// load history from local storage
+function getSearchHistory() {
+  const searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+  if (searchHistory && Array.isArray(searchHistory) && searchHistory.length >= 1) {
+    return searchHistory;
+  }
+  return [];
+};
+
+// write history from storage to html
+function writeHistoryList() {
+  const historyFromStorage = getSearchHistory();
+  historyListTable.empty();
+  if (historyFromStorage.length > 0) {
+    $.each(historyFromStorage, function (index, searchedCity) {
+      const historyElement = "<tr><td><a href='#' data-history-city='" + searchedCity.name + "'>" + searchedCity.name + "</a></td></tr>";
+      $(historyListTable).prepend(historyElement);
+    })
+  } else {
+    $(historyListTable).prepend("<tr><td>Nothing here!</td></tr>");
+  }
+  handleHistoryLinkClick();
+};
+
+// click event handling on history
+function handleHistoryLinkClick() {
+  const cityFromHistory = $("[data-history-city]");
+  $(cityFromHistory).on("click", function() {
+  const cityClicked = $(this).attr("data-history-city");
+  $(inputCityName).val(cityClicked);
+  todayWeatherUrl(cityClicked);
+})
+}
