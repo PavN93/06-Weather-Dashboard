@@ -6,15 +6,14 @@ const todayWeatherField = $("[data-weather='today']")
 const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 
 
-
+// on page load
 writeHistoryList();
+
 // search button click
 $(searchBtn).on("click", function() {
   console.log(moment().add(2, "d").format("YYYY-MM-DD"), "12:00:00");
   const cityName = inputCityName.val();
   inputCityTodayUrl = todayWeatherUrl(cityName);
-  fiveDaysWeatherUrl = forFiveDaysUrl(cityName);
-  // fiveDaysWeather = getFiveDaysWeather(fiveDaysWeatherUrl);
 });
 
 
@@ -38,6 +37,7 @@ function getTodayWeather(inputCityTodayUrl, cityName) {
     success : function (todayWeatherDetails) {
       // successfulSearch(cityName);
       writeCurrentWeather(todayWeatherDetails, cityName);
+      forFiveDaysUrl(cityName)
     }
   }).catch(function() {
     console.log("There was an error");
@@ -60,13 +60,10 @@ function getFiveDaysWeather(fiveDaysWeatherUrl) {
 function writeCurrentWeather(todayWeatherDetails, cityName) {
   todayWeatherField.empty();
   const iconId = todayWeatherDetails.weather[0].icon;
-  let writeWeatherDetails = "<img src='./assets/images/icons/" + iconId + ".png' style=width:50px;/>"; 
-  todayWeatherField.append(writeWeatherDetails);
-  // had to split appending due to styling issues
+  let writeWeatherDetails = "<img src='./assets/images/icons/" + iconId + ".png' style=width:50px;/>";
   let currentDate = moment().format('D-M-YYYY');
-  writeWeatherDetails = "<h6>" + todayWeatherDetails.name + " (" + currentDate + ")</h6>";
-  todayWeatherField.append(writeWeatherDetails);
-  writeWeatherDetails = "<p>Temperature: " + Math.round(todayWeatherDetails.main.temp) + "\xB0C</p>";
+  writeWeatherDetails += "<h6>" + todayWeatherDetails.name + " (" + currentDate + ")</h6>";
+  writeWeatherDetails += "<p>Temperature: " + Math.round(todayWeatherDetails.main.temp) + "\xB0C</p>";
   writeWeatherDetails += "<p>Humidity: " + todayWeatherDetails.main.humidity + "%</p>";
   writeWeatherDetails += "<p>Wind: " + todayWeatherDetails.wind.speed + " mph</p>";
   todayWeatherField.append(writeWeatherDetails);
