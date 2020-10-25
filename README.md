@@ -16,12 +16,15 @@ Important: I noticed strange behavior of the icons sometimes showing wrong weath
 ## Usage
 ### What does it do?
 Application fetches data from OpenWeather and write it onto specific elements of the page. Searched cities (if found successfully) are stored on history list which capacity is limited to 8 elements. Next search will cause the last element on the list to get discarded. Also, all the elements on history list are hyperlinks that will search the clicked city once again and bring the newest reported data. Erase button will cause to clear the whole search history as well as current search results.
-![Board screenshot](./assets/images/Screenshot1.png)
+![Board screenshot](./assets/images/Screenshot1.png)    
+
 
 ### How to use?
-![Board screenshot clear](./assets/images/ScreenshotClear.png)
+![Board screenshot clear](./assets/images/ScreenshotClear.png)    
+
 User can use search bar on top of the page to specify the name of the city to get forecast for. After pressing search button the app will do it's magic to bring some details to the user.
-![Board screenshot error](./assets/images/ScreenshotError.png)
+![Board screenshot error](./assets/images/ScreenshotError.png)    
+
 If the name is incorrect, missing in database or there is other issue on the way, the app will display it to the user. After pressing erase button or simply searching again (if search was successfull this time), all will go back to normal and the forecast will be displayed.  
 ### Access
 Website can be directly accessed on [GitGub Pages](https://pavn93.github.io/06-Weather-Dashboard/).  
