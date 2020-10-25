@@ -6,63 +6,49 @@ const todayWeatherField = $("[data-weather='today']")
 const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 
 
-// on page load
+// On page load
 writeHistoryList();
 writeWeatherOnLoad();
 
-// search button click
+// Search button click
 $(searchBtn).on("click", function() {
   console.log(moment().add(2, "d").format("YYYY-MM-DD"), "12:00:00");
   const cityName = inputCityName.val();
-  inputCityTodayUrl = todayWeatherUrl(cityName);
+  todayWeatherUrl(cityName);
 });
 
+// Write most recent search on page load
 function writeWeatherOnLoad (){
   const historyFromStorage = getSearchHistory();
   if (historyFromStorage.length > 0) {
-    todayWeatherUrl(historyFromStorage[historyFromStorage.length -1].name);
+    const mostRecentSearch = historyFromStorage[historyFromStorage.length -1].name
+    todayWeatherUrl(mostRecentSearch);
+    $(inputCityName).val(mostRecentSearch.name);
   }
 };
 
-// Construct current weather link
+// Construct link for current weather
 function todayWeatherUrl(cityName) {
   const todayUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=metric&appid=" + apiKey;
   getTodayWeather(todayUrl, cityName) ;
 };
 
-// Construct 5 days weather link
-function forFiveDaysUrl(cityName) {
-  const fiveDaysUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric&appid=" + apiKey;
-  getFiveDaysWeather(fiveDaysUrl);
-};
-
-// get object for todays weather
+// Get object for todays weather
 function getTodayWeather(inputCityTodayUrl, cityName) { 
+  console.log("Today weather url requested");
   $.ajax({
     url : inputCityTodayUrl,
     success : function (todayWeatherDetails) {
-      // successfulSearch(cityName);
       writeCurrentWeather(todayWeatherDetails, cityName);
-      forFiveDaysUrl(cityName)
+      constructUVIndexUrl(todayWeatherDetails);
+      forFiveDaysUrl(cityName);
     }
   }).catch(function() {
-    console.log("There was an error");
+    console.log("There was an error when requesting todays weather");
   });
 };
 
-// get object for five days weather
-function getFiveDaysWeather(fiveDaysWeatherUrl) {
-  $.ajax({
-    url : fiveDaysWeatherUrl,
-    success : function (fiveDaysWeatherDetails) {
-      writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
-    }
-  }).catch(function() {
-    console.log("Couldn't find 5 days weather");
-  })
-};
-
-// write todays weather and date
+// Write todays weather and date
 function writeCurrentWeather(todayWeatherDetails, cityName) {
   todayWeatherField.empty();
   const iconId = todayWeatherDetails.weather[0].icon;
@@ -76,17 +62,100 @@ function writeCurrentWeather(todayWeatherDetails, cityName) {
   saveHistoryToStorage(cityName, todayWeatherDetails);
 };
 
-// write five days weather to cards
-function writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl){
-  console.log("five days object:", fiveDaysWeatherDetails);
-  console.log("five days URL:", fiveDaysWeatherUrl);
+
+// Construct link for UV index
+function constructUVIndexUrl(todayWeatherDetails) {
+  const latitude = todayWeatherDetails.coord.lat;
+  const longitude = todayWeatherDetails.coord.lon;
+  const uvIndexUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + latitude + "&lon=" + longitude + "&appid=" + apiKey;
+  getUVIndexValue
+  // return uvIndexUrl;
+  getUVIndexValue(uvIndexUrl);
 };
 
-// function to add searched city to history
+// Get UV Index value
+function getUVIndexValue(uvIndexUrl) {
+  $.ajax({
+    url: uvIndexUrl
+  }).then(function (uvIndexObject) {
+    writeUVIndex(uvIndexObject.value);
+  }).catch(function() {
+    console.log("Error when requesting UV index");
+  })
+};
+
+// Append UV index to current weather card
+function writeUVIndex(uvIndexValue) {
+  let color = "";
+  if (uvIndexValue <= 2) {
+    color = "Green";
+  } else if (uvIndexValue > 2 && uvIndexValue <= 5) {
+    color = "Gold";
+  } else if (uvIndexValue > 5 && uvIndexValue <= 7) {
+    color = "DarkOrange";
+  } else if (uvIndexValue > 7 && uvIndexValue <= 10) {
+    color = "Crimson"
+  } else {
+    color = "DarkViolet"
+  };
+  const appendIndex = "<p>UV Index: <span style='color:" + color + "'>" + uvIndexValue + "</span></p>";
+  todayWeatherField.append(appendIndex);
+}
+
+// Construct link for five days weather
+function forFiveDaysUrl(cityName) {
+  const fiveDaysUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric&appid=" + apiKey;
+  getFiveDaysWeather(fiveDaysUrl);
+};
+
+// Get object for five days weather
+function getFiveDaysWeather(fiveDaysWeatherUrl) {
+  console.log("Five days weather url requested");
+  $.ajax({
+    url : fiveDaysWeatherUrl,
+    success : function (fiveDaysWeatherDetails) {
+      writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
+    }
+  }).catch(function() {
+    console.log("Couldn't find 5 days weather");
+  })
+};
+
+// Write five days weather to cards
+function writeFiveDaysWeather(fiveDaysWeatherDetails){
+  let fiveDaysArray = fiveDaysWeatherDetails.list;
+  for (let index = 1; index <= 5; index++) {
+    let cardToWriteData = $("[data-five-days='" + index + "']");
+    cardToWriteData.empty();
+    let nextDay = moment().add(index, "day").format("DD-MM-YYYY");
+    let nextDayWeather = fiveDaysArray.filter(element => moment(element.dt_txt).format("DD-MM-YYYY") == nextDay);
+    if (nextDayWeather.length >= 5) {
+      // Get weather for 12 o'clock for every day if current time is past 12
+      let nextDayWeatherToWrite = nextDayWeather[4];
+      let iconId = nextDayWeatherToWrite.weather[0].icon;
+      let writeOnCard = "<h6>" + nextDay + "</h6>";
+      writeOnCard += "<img src='./assets/images/icons/" + iconId + ".png' style=width:30px;/>";
+      writeOnCard += "<p>Temp: " + Math.round(nextDayWeatherToWrite.main.temp) + "\xB0C</p>";
+      writeOnCard += "<p>Hum: " + nextDayWeatherToWrite.main.humidity + "%</p>";
+      cardToWriteData.append(writeOnCard);
+    } else {
+      // If current time is before 12AM, get the last reported result
+      let nextDayWeatherToWrite = nextDayWeather[nextDayWeather.length -1];
+      let iconId = nextDayWeatherToWrite.weather[0].icon;
+      let writeOnCard = "<h6>" + nextDay + "</h6>";
+      writeOnCard += "<img src='./assets/images/icons/" + iconId + ".png' style=width:30px;/>";
+      writeOnCard += "<p>Temp: " + Math.round(nextDayWeatherToWrite.main.temp) + "\xB0C</p>";
+      writeOnCard += "<p>Hum: " + nextDayWeatherToWrite.main.humidity + "%</p>";
+      cardToWriteData.append(writeOnCard);
+    }
+  }
+};
+
+// Add searched city to history
 function saveHistoryToStorage(cityName, todayWeatherDetails){
   searchHistory = getSearchHistory();
   const result = {
-    name : cityName,
+    name : todayWeatherDetails.name,
     id : todayWeatherDetails.id
   }
   const id = result.id;
@@ -103,7 +172,7 @@ function saveHistoryToStorage(cityName, todayWeatherDetails){
   writeHistoryList();
 };
 
-// load history from local storage
+// Load history from local storage
 function getSearchHistory() {
   const searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
   if (searchHistory && Array.isArray(searchHistory) && searchHistory.length >= 1) {
@@ -112,12 +181,11 @@ function getSearchHistory() {
   return [];
 };
 
-// write history from storage to html
+// Write history from storage to html
 function writeHistoryList() {
   const historyFromStorage = getSearchHistory();
   historyListTable.empty();
   if (historyFromStorage.length > 0) {
-    // todayWeatherUrl(historyFromStorage[historyFromStorage.length -1].name);
     $.each(historyFromStorage, function (index, searchedCity) {
       const historyElement = "<tr><td><a href='#' data-history-city='" + searchedCity.name + "'>" + searchedCity.name + "</a></td></tr>";
       $(historyListTable).prepend(historyElement);
@@ -128,7 +196,7 @@ function writeHistoryList() {
   handleHistoryLinkClick();
 };
 
-// click event handling on history
+// Click event handling on history
 function handleHistoryLinkClick() {
   const cityFromHistory = $("[data-history-city]");
   $(cityFromHistory).on("click", function() {
