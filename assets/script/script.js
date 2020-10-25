@@ -7,25 +7,7 @@ const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 const fiveDaysCards = $("[data-five-days]");
 const erase = $("[data-button='erase'");
 
-
-// On page load
-writeHistoryList();
-writeWeatherOnLoad();
-
-// Search button click
-$(searchBtn).on("click", function (event) {
-  event.preventDefault();
-  console.log(moment().add(2, "d").format("YYYY-MM-DD"), "12:00:00");
-  const cityName = inputCityName.val();
-  todayWeatherUrl(cityName);
-});
-
-$(erase).on("click", function (event) {
-  event.preventDefault();
-  clearSearchHistory();
-  writeWeatherOnLoad();
-})
-
+// Clear local storage and rewrite search history
 function clearSearchHistory() {
   localStorage.clear();
   writeHistoryList();
@@ -61,7 +43,7 @@ function getTodayWeather(inputCityTodayUrl, cityName) {
       forFiveDaysUrl(cityName);
     }
   }).catch(function () {
-    console.log("There was an error when requesting todays weather");
+    handleError();
   });
 };
 
@@ -97,7 +79,7 @@ function getUVIndexValue(uvIndexUrl) {
   }).then(function (uvIndexObject) {
     writeUVIndex(uvIndexObject.value);
   }).catch(function () {
-    console.log("Error when requesting UV index");
+    handleError();
   })
 };
 
@@ -134,7 +116,7 @@ function getFiveDaysWeather(fiveDaysWeatherUrl) {
       writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
     }
   }).catch(function () {
-    console.log("Couldn't find 5 days weather");
+    handleError();
   })
 };
 
@@ -223,3 +205,38 @@ function handleHistoryLinkClick() {
     todayWeatherUrl(cityClicked);
   })
 };
+
+// In case of any error go here
+function handleError(){
+  todayWeatherField.empty();
+  fiveDaysCards.empty()
+  console.log("error");
+  let mainError = "<h6 style='color:Crimson'>Couldn't find it</h6>";
+  todayWeatherField.append(mainError);
+  const jokeError = ["SORRY", "THERE", "WAS", "AN", "ERROR"];
+  for (let index = 0; index < 5; index++) {
+    errorWord = "<h6 style='color:Crimson; font-size:30px'>" + jokeError[index] + "</h6>";
+    let cardToWriteError = $("[data-five-days='" + (index + 1) + "']");
+    cardToWriteError.append(errorWord);
+  }
+};
+
+// On page load
+writeHistoryList();
+writeWeatherOnLoad();
+
+// Search button click
+$(searchBtn).on("click", function (event) {
+  event.preventDefault();
+  console.log(moment().add(2, "d").format("YYYY-MM-DD"), "12:00:00");
+  const cityName = inputCityName.val();
+  todayWeatherUrl(cityName);
+});
+
+// Erase button click
+$(erase).on("click", function (event) {
+  event.preventDefault();
+  clearSearchHistory();
+  writeWeatherOnLoad();
+})
+
