@@ -7,29 +7,26 @@ const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 const fiveDaysCards = $("[data-five-days]");
 const erase = $("[data-button='erase'");
 
-// Clear local storage and rewrite search history
-function clearSearchHistory() {
-  localStorage.clear();
-  writeHistoryList();
-}
-
-// Write most recent search on page load
-function writeWeatherOnLoad() {
-  const historyFromStorage = getSearchHistory();
-  if (historyFromStorage.length > 0) {
-    const mostRecentSearch = historyFromStorage[historyFromStorage.length - 1].name
-    todayWeatherUrl(mostRecentSearch);
-    $(inputCityName).val(mostRecentSearch.name);
-  } else {
-    todayWeatherField.empty();
-    fiveDaysCards.empty();
-  }
-};
-
 // Construct link for current weather
 function todayWeatherUrl(cityName) {
   const todayUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=metric&appid=" + apiKey;
   getTodayWeather(todayUrl, cityName);
+};
+
+// Construct link for UV index
+function constructUVIndexUrl(todayWeatherDetails) {
+  const latitude = todayWeatherDetails.coord.lat;
+  const longitude = todayWeatherDetails.coord.lon;
+  const uvIndexUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + latitude + "&lon=" + longitude + "&appid=" + apiKey;
+  getUVIndexValue
+  // return uvIndexUrl;
+  getUVIndexValue(uvIndexUrl);
+};
+
+// Construct link for five days weather
+function forFiveDaysUrl(cityName) {
+  const fiveDaysUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric&appid=" + apiKey;
+  getFiveDaysWeather(fiveDaysUrl);
 };
 
 // Get object for todays weather
@@ -47,6 +44,52 @@ function getTodayWeather(inputCityTodayUrl, cityName) {
   });
 };
 
+// Get UV Index value
+function getUVIndexValue(uvIndexUrl) {
+  $.ajax({
+    url: uvIndexUrl
+  }).then(function (uvIndexObject) {
+    writeUVIndex(uvIndexObject.value);
+  }).catch(function () {
+    handleError();
+  })
+};
+
+// Get object for five days weather
+function getFiveDaysWeather(fiveDaysWeatherUrl) {
+  console.log("Five days weather url requested");
+  $.ajax({
+    url: fiveDaysWeatherUrl,
+    success: function (fiveDaysWeatherDetails) {
+      writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
+    }
+  }).catch(function () {
+    handleError();
+  })
+};
+
+// Load history from local storage
+function getSearchHistory() {
+  const searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+  if (searchHistory && Array.isArray(searchHistory) && searchHistory.length >= 1) {
+    return searchHistory;
+  }
+  return [];
+};
+
+// Write most recent search on page load
+function writeWeatherOnLoad() {
+  const historyFromStorage = getSearchHistory();
+  if (historyFromStorage.length > 0) {
+    const mostRecentSearch = historyFromStorage[historyFromStorage.length - 1].name
+    todayWeatherUrl(mostRecentSearch);
+    $(inputCityName).val(mostRecentSearch.name);
+  } else {
+    todayWeatherField.empty();
+    fiveDaysCards.empty();
+  }
+};
+
 // Write todays weather and date
 function writeCurrentWeather(todayWeatherDetails, cityName) {
   todayWeatherField.empty();
@@ -59,28 +102,6 @@ function writeCurrentWeather(todayWeatherDetails, cityName) {
   writeWeatherDetails += "<p>Wind: " + todayWeatherDetails.wind.speed + " mph</p>";
   todayWeatherField.append(writeWeatherDetails);
   saveHistoryToStorage(cityName, todayWeatherDetails);
-};
-
-
-// Construct link for UV index
-function constructUVIndexUrl(todayWeatherDetails) {
-  const latitude = todayWeatherDetails.coord.lat;
-  const longitude = todayWeatherDetails.coord.lon;
-  const uvIndexUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + latitude + "&lon=" + longitude + "&appid=" + apiKey;
-  getUVIndexValue
-  // return uvIndexUrl;
-  getUVIndexValue(uvIndexUrl);
-};
-
-// Get UV Index value
-function getUVIndexValue(uvIndexUrl) {
-  $.ajax({
-    url: uvIndexUrl
-  }).then(function (uvIndexObject) {
-    writeUVIndex(uvIndexObject.value);
-  }).catch(function () {
-    handleError();
-  })
 };
 
 // Append UV index to current weather card
@@ -99,25 +120,6 @@ function writeUVIndex(uvIndexValue) {
   };
   const appendIndex = "<p>UV Index: <span style='color:" + color + "'>" + uvIndexValue + "</span></p>";
   todayWeatherField.append(appendIndex);
-}
-
-// Construct link for five days weather
-function forFiveDaysUrl(cityName) {
-  const fiveDaysUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric&appid=" + apiKey;
-  getFiveDaysWeather(fiveDaysUrl);
-};
-
-// Get object for five days weather
-function getFiveDaysWeather(fiveDaysWeatherUrl) {
-  console.log("Five days weather url requested");
-  $.ajax({
-    url: fiveDaysWeatherUrl,
-    success: function (fiveDaysWeatherDetails) {
-      writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
-    }
-  }).catch(function () {
-    handleError();
-  })
 };
 
 // Write five days weather to cards
@@ -150,6 +152,21 @@ function writeFiveDaysWeather(fiveDaysWeatherDetails) {
   }
 };
 
+// Write history from storage to html
+function writeHistoryList() {
+  const historyFromStorage = getSearchHistory();
+  historyListTable.empty();
+  if (historyFromStorage.length > 0) {
+    $.each(historyFromStorage, function (index, searchedCity) {
+      const historyElement = "<tr><td><a href='#' data-history-city='" + searchedCity.name + "'>" + searchedCity.name + "</a></td></tr>";
+      $(historyListTable).prepend(historyElement);
+    })
+  } else {
+    $(historyListTable).prepend("<tr><td>Nothing here!</td></tr>");
+  }
+  handleHistoryLinkClick();
+};
+
 // Add searched city to history
 function saveHistoryToStorage(cityName, todayWeatherDetails) {
   searchHistory = getSearchHistory();
@@ -171,41 +188,6 @@ function saveHistoryToStorage(cityName, todayWeatherDetails) {
   writeHistoryList();
 };
 
-// Load history from local storage
-function getSearchHistory() {
-  const searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
-  if (searchHistory && Array.isArray(searchHistory) && searchHistory.length >= 1) {
-    return searchHistory;
-  }
-  return [];
-};
-
-// Write history from storage to html
-function writeHistoryList() {
-  const historyFromStorage = getSearchHistory();
-  historyListTable.empty();
-  if (historyFromStorage.length > 0) {
-    $.each(historyFromStorage, function (index, searchedCity) {
-      const historyElement = "<tr><td><a href='#' data-history-city='" + searchedCity.name + "'>" + searchedCity.name + "</a></td></tr>";
-      $(historyListTable).prepend(historyElement);
-    })
-  } else {
-    $(historyListTable).prepend("<tr><td>Nothing here!</td></tr>");
-  }
-  handleHistoryLinkClick();
-};
-
-// Click event handling on history
-function handleHistoryLinkClick() {
-  const cityFromHistory = $("[data-history-city]");
-  $(cityFromHistory).on("click", function (event) {
-    event.preventDefault();
-    const cityClicked = $(this).attr("data-history-city");
-    $(inputCityName).val(cityClicked);
-    todayWeatherUrl(cityClicked);
-  })
-};
-
 // In case of any error go here
 function handleError(){
   todayWeatherField.empty();
@@ -219,6 +201,23 @@ function handleError(){
     let cardToWriteError = $("[data-five-days='" + (index + 1) + "']");
     cardToWriteError.append(errorWord);
   }
+};
+
+// Click event handling on history
+function handleHistoryLinkClick() {
+  const cityFromHistory = $("[data-history-city]");
+  $(cityFromHistory).on("click", function (event) {
+    event.preventDefault();
+    const cityClicked = $(this).attr("data-history-city");
+    $(inputCityName).val(cityClicked);
+    todayWeatherUrl(cityClicked);
+  })
+};
+
+// Clear local storage and rewrite search history
+function clearSearchHistory() {
+  localStorage.clear();
+  writeHistoryList();
 };
 
 // On page load
@@ -238,5 +237,5 @@ $(erase).on("click", function (event) {
   event.preventDefault();
   clearSearchHistory();
   writeWeatherOnLoad();
-})
+});
 

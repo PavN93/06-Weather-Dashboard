@@ -18,7 +18,14 @@ Important: I noticed strange behavior of the icons sometimes showing wrong weath
 Application fetches data from OpenWeather and write it onto specific elements of the page. Searched cities (if found successfully) are stored on history list which capacity is limited to 8 elements. Next search will cause the last element on the list to get discarded. Also, all the elements on history list are hyperlinks that will search the clicked city once again and bring the newest reported data. Erase button will cause to clear the whole search history as well as current search results.
 ![Board screenshot](./assets/images/Screenshot1.png)    
 
+One of the details shown on the screen is UV index. The values presented in color are:
+* Green - index below 0 (safe)
+* Yellow - index between 2 and 5
+* Orange - index between 5 and 7
+* Red - index between 7 and 10
+* Violet - index above 10 (extreme)  
 
+Recommended values were found on [Wikipedia](https://en.wikipedia.org/wiki/Ultraviolet_index). Link to full Global Solar UV Index work is [HERE](https://www.who.int/uv/publications/en/UVIGuide.pdf).
 ### How to use?
 ![Board screenshot clear](./assets/images/ScreenshotClear.png)    
 
