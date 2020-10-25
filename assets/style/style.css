@@ -43,6 +43,17 @@ section {
   margin: auto;
 }
 
+.erase {
+  position: absolute;
+  top: 15%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+}
+
+.erase img {
+  width: 100px;
+}
+
 .history-on-image {
   position: absolute;
   top: 50%;
