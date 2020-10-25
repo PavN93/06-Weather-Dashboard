@@ -19,7 +19,7 @@ Application fetches data from OpenWeather and write it onto specific elements of
 ![Board screenshot](./assets/images/Screenshot1.png)    
 
 One of the details shown on the screen is UV index. The values presented in color are:
-* Green - index below 0 (safe)
+* Green - index below 2 (safe)
 * Yellow - index between 2 and 5
 * Orange - index between 5 and 7
 * Red - index between 7 and 10
@@ -62,6 +62,7 @@ Transparent images used in this project are found on:
 Icons were found on [https://github.com/yuvraaaj/openweathermap-api-icons
 ](https://github.com/yuvraaaj/openweathermap-api-icons
 )  
+Background pattern downloaded from [www.toptal.com](www.toptal.com).  
 I tried my best to add all the sources used in this project. If any website, creator or author were ommitted, please contact me.
 
 ## Contact me
