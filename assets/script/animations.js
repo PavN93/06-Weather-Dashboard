@@ -1,4 +1,6 @@
 
+const headJumbo = $("#headjumbo");
+const historyCard = $("#history-card");
 const todayCard = $("#today");
 const firstDayCard = $("#day-1");
 const secondDayCard = $("#day-2");
@@ -6,8 +8,19 @@ const thirdDayCard = $("#day-3");
 const fourthDayCard = $("#day-4");
 const fifthDayCard = $("#day-5");
 
+
+function showMainUI() {
+  $(headJumbo).delay(200).animate({
+    opacity: 1
+  }, 80, function() {
+    $(historyCard).animate({
+      opacity: 1
+    }, 80)
+  })
+};
+
 // Show elements of the interface that are hidden on page load
-function showHiddenInterface() {
+function showDetailsCards() {
   $(todayCard).animate({
     opacity: 1
   }, 60, function () {
@@ -34,7 +47,7 @@ function showHiddenInterface() {
 };
 
 // Used ONLY on erasing data to hide elements again as on page load
-function hideInterfaceElements() {
+function hideDetailsCards() {
   $(fifthDayCard).animate({
     opacity: 0
   }, 60, function () {
