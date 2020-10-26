@@ -6,6 +6,7 @@
   * [How to use?](#how-to-use)
   * [Access](#Access)
 * [Improvements](#Improvements)
+  *[Animations](#Animations)
 * [Built with](#built-with)
 * [Acknowledgements](#Acknowledgements)
 * [Images](#Images)
@@ -38,7 +39,13 @@ Website can be directly accessed on [GitGub Pages](https://pavn93.github.io/06-W
 The source code can be find on GitHub itself [https://github.com/PavN93/06-Weather-Dashboard.git](https://github.com/PavN93/06-Weather-Dashboard.git).  
 ## Improvements
 * I'm planning to add some animations on page load and possibly in the event of using erase button.
-* One major improvement would be further develop responsiveness of the 5-days weather. Instead collapsing it into column make a slider so all days will be displayed on some sort of "carousel".
+* One major improvement would be further develop responsiveness of the 5-days weather. Instead collapsing it into column make a slider so all days will be displayed on some sort of "carousel".  
+* Another idea is to make the search bar to stick to the top of the page and thus, make it possible for the mobile user to search again at any point of the page without scrolling back to the top.    
+
+### Animations  
+One of the potential improvements is actually on it's way to be implemented properly. At the moment of writing, animations are successfully added, but there are issues where one animation can affect the other. The bug can be revealed in a situation when the refresh page is initiated and during the animation of loading details onto the board, erase button is used. That won't stop the loading animation to stop, but it will start removing cards from the board which will cause the already invisible card to reappear empty. It work exactly the same the other way. When erase button is pressed and new city is searched quickly enough, some cards are displayed after search button click, but the hidding animation is in process which cause already shown cards to disappear. Applied temporary solution is to speed the animations up so the user has less time to react and provoke the bug to show up.
+![Board screenshot hiddenUI](./assets/images/ScreenshotHiddenUI.png)    
+
 ## Built with
 * [Visual Studio Code](https://code.visualstudio.com/)
 * [jQuery](https://jquery.com/)

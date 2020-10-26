@@ -37,6 +37,10 @@ section {
   font-weight: 600;
 }
 
+#today, #day-1, #day-2, #day-3, #day-4, #day-5 {
+  opacity: 0;
+}
+
 .center-img-in-div {
   text-align: center;
   display: block;

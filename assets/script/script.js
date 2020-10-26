@@ -62,6 +62,7 @@ function getFiveDaysWeather(fiveDaysWeatherUrl) {
     url: fiveDaysWeatherUrl,
     success: function (fiveDaysWeatherDetails) {
       writeFiveDaysWeather(fiveDaysWeatherDetails, fiveDaysWeatherUrl);
+      showHiddenInterface();
     }
   }).catch(function () {
     handleError();
@@ -201,6 +202,7 @@ function handleError(){
     let cardToWriteError = $("[data-five-days='" + (index + 1) + "']");
     cardToWriteError.append(errorWord);
   }
+  showHiddenInterface();
 };
 
 // Click event handling on history
@@ -237,5 +239,6 @@ $(erase).on("click", function (event) {
   event.preventDefault();
   clearSearchHistory();
   writeWeatherOnLoad();
+  hideInterfaceElements();
 });
 
