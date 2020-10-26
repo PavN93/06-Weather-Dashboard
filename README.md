@@ -6,14 +6,14 @@
   * [How to use?](#how-to-use)
   * [Access](#Access)
 * [Improvements](#Improvements)
-  *[Animations](#Animations)
+  * [Animations](#Animations)
 * [Built with](#built-with)
 * [Acknowledgements](#Acknowledgements)
 * [Images](#Images)
 * [Contact me](#contact-me)
 ## About the project
 Weather Board is a simple application that will search for weather forecast for the city specified by the user. Application is based on javascript, is running in the browser and is using OpenWeather API. Fully responsive layout is mostly based on Bootstrap, but some CSS @media are added to improve the responsiveness even further.  
-Important: I noticed strange behavior of the icons sometimes showing wrong weather status. Please report if you can find similar issues.  
+Important: I noticed strange behavior of the icons sometimes showing wrong weather status. Please report if you can find similar issues. One of the ideas of why it's happening I came across is the difference between the user and searched city timezones.
 ## Usage
 ### What does it do?
 Application fetches data from OpenWeather and write it onto specific elements of the page. Searched cities (if found successfully) are stored on history list which capacity is limited to 8 elements. Next search will cause the last element on the list to get discarded. Also, all the elements on history list are hyperlinks that will search the clicked city once again and bring the newest reported data. Erase button will cause to clear the whole search history as well as current search results.
