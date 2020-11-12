@@ -7,22 +7,17 @@ const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 const fiveDaysCards = $("[data-five-days]");
 const erase = $("[data-button='erase'");
 
+// Sticky navbar
 window.onscroll = function() {myFunction()};
-
-// Get the navbar
 const navbar = document.getElementById("searchBar");
-
-// Get the offset position of the navbar
-var sticky = navbar.offsetTop;
-
-// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+const sticky = navbar.offsetTop;
 function myFunction() {
   if (window.pageYOffset >= sticky) {
     navbar.classList.add("sticky")
   } else {
     navbar.classList.remove("sticky");
   }
-}
+};
 
 // Construct link for current weather
 function todayWeatherUrl(cityName) {
