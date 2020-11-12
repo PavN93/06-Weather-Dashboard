@@ -7,6 +7,23 @@ const apiKey = "6d33bf81156e3b1180bb72bf2a4518c6";
 const fiveDaysCards = $("[data-five-days]");
 const erase = $("[data-button='erase'");
 
+window.onscroll = function() {myFunction()};
+
+// Get the navbar
+const navbar = document.getElementById("searchBar");
+
+// Get the offset position of the navbar
+var sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+
 // Construct link for current weather
 function todayWeatherUrl(cityName) {
   const todayUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=metric&appid=" + apiKey;
@@ -126,6 +143,7 @@ function writeUVIndex(uvIndexValue) {
 // Write five days weather to cards
 function writeFiveDaysWeather(fiveDaysWeatherDetails) {
   let fiveDaysArray = fiveDaysWeatherDetails.list;
+  console.log(fiveDaysArray);
   for (let index = 1; index <= 5; index++) {
     let cardToWriteData = $("[data-five-days='" + index + "']");
     cardToWriteData.empty();
@@ -134,6 +152,7 @@ function writeFiveDaysWeather(fiveDaysWeatherDetails) {
     if (nextDayWeather.length >= 5) {
       // Get weather for 12 o'clock for every day if current time is past 12
       let nextDayWeatherToWrite = nextDayWeather[4];
+      console.log(nextDayWeatherToWrite);
       let iconId = nextDayWeatherToWrite.weather[0].icon;
       let writeOnCard = "<h6>" + nextDay + "</h6>";
       writeOnCard += "<img src='./assets/images/icons/" + iconId + ".png' style=width:30px;/>";

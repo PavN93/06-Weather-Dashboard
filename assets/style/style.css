@@ -123,6 +123,13 @@ section {
   font-weight: 600;
 }
 
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 90%;
+  z-index: 2;
+}
+
  /* Header media */
 @media screen and (max-width: 955px) {
   .jumbotron h1 {
